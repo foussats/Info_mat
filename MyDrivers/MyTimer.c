@@ -61,12 +61,12 @@ void MyTimer_Stop(TIM_TypeDef * Timer){
 
 
 void MyTimer_IT_Conf(TIM_TypeDef * Timer, void (*IT_function) (void),int Prio){
-	Timer->DIER |= 0x1; 
+	Timer->DIER |= 0x1; //mise à 0 de DIER registre d'autorisation d'interruption
 	
 	if (Timer==TIM1){
 		pt_fct_tim1 = IT_function;
 		NVIC->IP[TIM1_UP_IRQn] = Prio<<4;
-		NVIC->ISER[0] |= 0x1<<TIM1_UP_IRQn;
+		NVIC->ISER[0] |= 0x1<<TIM1_UP_IRQn; //mise à 1 du bit de l'interruption
 	}else if (Timer==TIM2){
 		pt_fct_tim2 = IT_function;
 		NVIC->IP[TIM2_IRQn] |= Prio<<4;
@@ -84,7 +84,7 @@ void MyTimer_IT_Conf(TIM_TypeDef * Timer, void (*IT_function) (void),int Prio){
 }
 
 void MyTimer_IT_Disable(TIM_TypeDef * Timer){
-	Timer->DIER |= 0x0; 
+	Timer->DIER |= 0x0; //mise à 0 de DIER registre d'autorisation d'interruption
 	if (Timer==TIM1){
 		NVIC->ISER[0] &= ~(0x1<<TIM1_UP_IRQn);
 	}else if (Timer==TIM2){
@@ -99,7 +99,7 @@ void MyTimer_IT_Disable(TIM_TypeDef * Timer){
 
 void TIM1_UP_IRQHandler(void){
 	(*pt_fct_tim1)();
-		TIM1->SR = 0x0;
+	TIM1->SR = 0x0; //mise à 0 du status register
 }
 
 void TIM2_IRQHandler(void){
