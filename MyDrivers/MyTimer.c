@@ -36,32 +36,16 @@ void MyTimer_Conf(TIM_TypeDef * Timer,int Arr, int Psc){
 }
 
 void MyTimer_Start(TIM_TypeDef * Timer){
-	if (Timer==TIM1){
-		TIM1->CR1 |= TIM_CR1_CEN;
-	}else if (Timer==TIM2){
-		TIM2->CR1 |= TIM_CR1_CEN;
-	}else if (Timer==TIM3){
-		TIM3->CR1 |= TIM_CR1_CEN;
-	}else if (Timer==TIM4){
-		TIM4->CR1 |= TIM_CR1_CEN;
-	}
+		Timer->CR1 |= TIM_CR1_CEN;	
 }
 
 void MyTimer_Stop(TIM_TypeDef * Timer){
-	if (Timer==TIM1){
-		TIM1->CR1 &= ~(TIM_CR1_CEN);
-	}else if (Timer==TIM2){
-		TIM2->CR1 &= ~(TIM_CR1_CEN);
-	}else if (Timer==TIM3){
-		TIM3->CR1 &= ~(TIM_CR1_CEN);
-	}else if (Timer==TIM4){
-		TIM4->CR1 &= ~(TIM_CR1_CEN);
-	}
+		Timer->CR1 &= ~(TIM_CR1_CEN);
 }
 
 
 void MyTimer_IT_Conf(TIM_TypeDef * Timer, void (*IT_function) (void),int Prio){
-	Timer->DIER |= 0x1; //mise à 0 de DIER registre d'autorisation d'interruption
+	Timer->DIER |= TIM_DIER_UIE; //mise à 0 de DIER registre d'autorisation d'interruption
 	
 	if (Timer==TIM1){
 		pt_fct_tim1 = IT_function;
@@ -84,7 +68,7 @@ void MyTimer_IT_Conf(TIM_TypeDef * Timer, void (*IT_function) (void),int Prio){
 }
 
 void MyTimer_IT_Disable(TIM_TypeDef * Timer){
-	Timer->DIER |= 0x0; //mise à 0 de DIER registre d'autorisation d'interruption
+	Timer->DIER &= ~(TIM_DIER_UIE); //mise à 0 de DIER registre d'autorisation d'interruption
 	if (Timer==TIM1){
 		NVIC->ISER[0] &= ~(0x1<<TIM1_UP_IRQn);
 	}else if (Timer==TIM2){
@@ -98,23 +82,23 @@ void MyTimer_IT_Disable(TIM_TypeDef * Timer){
 
 
 void TIM1_UP_IRQHandler(void){
+	TIM1->SR &= ~(TIM_SR_UIF); //mise à 0 du status register
 	(*pt_fct_tim1)();
-	TIM1->SR = 0x0; //mise à 0 du status register
 }
 
 void TIM2_IRQHandler(void){
+	TIM2->SR &= ~(TIM_SR_UIF);
 	(*pt_fct_tim2)();
-		TIM2->SR = 0x0;
 }
 
 void TIM3_IRQHandler(void){
+	TIM3->SR &= ~(TIM_SR_UIF);
 	(*pt_fct_tim3)();
-		TIM3->SR = 0x0;
 }
 
 void TIM4_IRQHandler(void){
+	TIM4->SR &= ~(TIM_SR_UIF);
 	(*pt_fct_tim4)();
-		TIM4->SR = 0x0;
 }
 
 
