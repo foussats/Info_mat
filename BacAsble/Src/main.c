@@ -53,7 +53,9 @@ int main(void)
 		
 	GPIOC->CRH &= ~(GPIO_CRH_CNF10_0);
 	GPIOC->CRH |= GPIO_CRH_MODE10_1;
-/*
+
+	//output opendrain max speed 2MHz
+	/*
 	GPIOC->CRH |= GPIO_CRH_CNF10_0;
 	GPIOC->CRH &= ~(GPIO_CRH_CNF10_1);
 		
