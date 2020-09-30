@@ -37,7 +37,7 @@ int main(void)
   /* Configure the system clock to 72 MHz */
   SystemClock_Config();
 	
-	RCC->APB2ENR = RCC->APB2ENR | RCC_APB2ENR_IOPAEN ;
+	RCC->APB2ENR = RCC->APB2ENR | RCC_APB2ENR_IOPCEN ;
 	
 	//config
 	//floating input start & stop
